@@ -170,6 +170,8 @@
 #  define MODULE_OPTS			"-shared"
 #  define MKDIR_NO_UMASK
 #  define EXE_EXT			".exe"
+#  define LD_LIBRARY_PATH		"LD_LIBRARY_PATH"
+#  define LD_LIBRARY_PATH_LOCAL		LD_LIBRARY_PATH
 #endif
 
 #ifndef CC
@@ -730,7 +732,7 @@ static int parse_long_opt(char const *arg, command_t *cmd)
 
 		} else if (strcmp(value, "link") == 0) {
 			cmd->mode = MODE_LINK;
-			cmd->output = OUT_LIB;
+			cmd->output = OUT_STATIC_LIB_ONLY;
 
 		} else if (strcmp(value, "install") == 0) {
 			cmd->mode = MODE_INSTALL;
@@ -766,6 +768,8 @@ static int parse_long_opt(char const *arg, command_t *cmd)
 		print_config(value);
 
 		exit(0);
+	} else if (strcmp(var, "tag") == 0) {
+		return 1;
 	} else {
 		return 0;
 	}
@@ -2224,7 +2228,7 @@ static int run_mode(command_t *cmd)
 	}
 
 	l = "./.libs";
-	setenv(LD_LIBRARY_PATH_LOCAL, l, 1);
+//	setenv(LD_LIBRARY_PATH_LOCAL, l, 1);
 	rv = run_command(cmd, cmd->arglist);
 		if (rv) goto finish;
 	}
